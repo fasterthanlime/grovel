@@ -6,6 +6,7 @@ let grovel = require('../index')
 let assocIn = function (obj, path, val) { return grovel.assocIn.call(obj, path, val) }
 let dissocIn = function (obj, path) { return grovel.dissocIn.call(obj, path) }
 let getIn = function (obj, path) { return grovel.getIn.call(obj, path) }
+let count = function (obj) { return grovel.count.call(obj) }
 
 test('assocIn', function (t) {
   t.same(assocIn({a: 1}, ['a'], 2), { a: 2 }, 'string key at depth 1')
@@ -79,6 +80,17 @@ test('getIn', function (t) {
       }
     ]
   }, ['a', 1, 'b', 2, 'c']), 'hello!', 'deep')
+
+  t.end()
+})
+
+test('count', function (t) {
+  t.same(count([0, 1, 2]), 3)
+  t.same(count([1, 2, 3]), 3)
+  t.same(count({a: 'a', b: 'b', c: 'c'}), 3)
+  t.same(count(null), 0)
+  t.same(count(undefined), 0)
+  t.same(count(3), 0)
 
   t.end()
 })

@@ -55,8 +55,17 @@ function getIn (path) {
   }
 }
 
+function count () {
+  try {
+    return Object.keys(this).length
+  } catch (e) {
+    return 0
+  }
+}
+
 module.exports = {
   assocIn,
   dissocIn,
-  getIn
+  getIn,
+  count
 }
