@@ -1,5 +1,5 @@
 {
-  "name": "mimi",
+  "name": "mimi-ftl",
   "version": "1.0.0",
   "description": "Utilities to handle almost-immutable data structures",
   "main": "index.js",
