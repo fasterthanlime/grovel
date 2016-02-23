@@ -46,6 +46,28 @@ test('assocIn', function (t) {
     }
   }, 'convert to object')
 
+  t.same(assocIn({
+    library: {
+      games: {}
+    }
+  }, ['library', 'games'], {
+    dashboard: {
+      '57348': {
+        classification: 'rose'
+      }
+    }
+  }), {
+    library: {
+      games: {
+        dashboard: {
+          '57348': {
+            classification: 'rose'
+          }
+        }
+      }
+    }
+  }, 'both kinda nested')
+
   t.end()
 })
 
