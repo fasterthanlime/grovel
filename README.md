@@ -1,5 +1,7 @@
 # mimi
 
+[![Build Status](https://travis-ci.org/fasterthanlime/mimi.svg?branch=master)](https://travis-ci.org/fasterthanlime/mimi)
+
 A collection of utilities to handle almost-immutable data.
 
 The idea is to be able to do `oldState === newState` or `oldState.a.b.c` ===
