@@ -1,5 +1,5 @@
 {
-  "name": "mimi-ftl",
+  "name": "grovel",
   "version": "1.1.0",
   "description": "Utilities to handle almost-immutable data structures",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fasterthanlime/mimi.git"
+    "url": "git+https://github.com/fasterthanlime/grovel.git"
   },
   "keywords": [
     "data"
@@ -16,9 +16,9 @@
   "author": "Amos Wenger <amos@itch.io>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fasterthanlime/mimi/issues"
+    "url": "https://github.com/fasterthanlime/grovel/issues"
   },
-  "homepage": "https://github.com/fasterthanlime/mimi#readme",
+  "homepage": "https://github.com/fasterthanlime/grovel#readme",
   "devDependencies": {
     "tape": "^4.4.0"
   }
