@@ -8,22 +8,18 @@ function zero (key) {
   }
 }
 
-function assocIn (obj, path, val) {
-  pre: { // eslint-disable-line
-    Array.isArray(path)
-  }
-
+function assocIn (path, val) {
   let key = path.shift()
 
   let result
-  if (Array.isArray(obj)) {
-    result = obj.slice()
+  if (Array.isArray(this)) {
+    result = this.slice()
   } else {
-    result = Object.assign({}, obj)
+    result = Object.assign({}, this)
   }
 
   if (path.length > 0) {
-    result[key] = assocIn(result[key] || zero(path[0]), path, val)
+    result[key] = assocIn.call(result[key] || zero(path[0]), path, val)
   } else {
     result[key] = val
   }
@@ -31,39 +27,31 @@ function assocIn (obj, path, val) {
   return result
 }
 
-function dissocIn (obj, path) {
-  pre: { // eslint-disable-line
-    Array.isArray(path)
-  }
-
+function dissocIn (path) {
   let key = path.shift()
 
   let result
-  if (Array.isArray(obj)) {
-    result = obj.slice()
+  if (Array.isArray(this)) {
+    result = this.slice()
   } else {
-    result = Object.assign({}, obj)
+    result = Object.assign({}, this)
   }
 
   if (path.length > 0) {
-    result[key] = dissocIn(result[key] || zero(path[0]), path)
+    result[key] = dissocIn.call(result[key] || zero(path[0]), path)
   } else {
     delete result[key]
   }
   return result
 }
 
-function getIn (obj, path) {
-  pre: { // eslint-disable-line
-    Array.isArray(path)
-  }
-
+function getIn (path) {
   let key = path.shift()
 
   if (path.length > 0) {
-    return getIn(obj[key], path)
+    return getIn.call(this[key], path)
   } else {
-    return obj[key]
+    return this[key]
   }
 }
 

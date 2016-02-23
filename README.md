@@ -1,6 +1,6 @@
-# mimi
+# grovel
 
-[![Build Status](https://travis-ci.org/fasterthanlime/mimi.svg?branch=master)](https://travis-ci.org/fasterthanlime/mimi)
+[![Build Status](https://travis-ci.org/fasterthanlime/grovel.svg?branch=master)](https://travis-ci.org/fasterthanlime/grovel)
 
 A collection of utilities to handle almost-immutable data.
 
