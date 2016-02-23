@@ -1,0 +1,22 @@
+{
+  "name": "mimi",
+  "version": "1.0.0",
+  "description": "Utilities to handle almost-immutable data structures",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fasterthanlime/mimi.git"
+  },
+  "keywords": [
+    "data"
+  ],
+  "author": "Amos Wenger <amos@itch.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fasterthanlime/mimi/issues"
+  },
+  "homepage": "https://github.com/fasterthanlime/mimi#readme"
+}
