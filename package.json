@@ -1,6 +1,6 @@
 {
   "name": "mimi-ftl",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Utilities to handle almost-immutable data structures",
   "main": "index.js",
   "scripts": {
