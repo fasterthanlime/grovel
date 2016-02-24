@@ -46,6 +46,7 @@ function dissocIn (path) {
 }
 
 function getIn (path) {
+  if (!this) return null
   let key = path[0]
 
   if (path.length > 1) {

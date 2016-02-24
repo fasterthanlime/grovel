@@ -103,6 +103,10 @@ test('getIn', function (t) {
     ]
   }, ['a', 1, 'b', 2, 'c']), 'hello!', 'deep')
 
+  t.equal(getIn({a: 'b'}, ['a']), 'b')
+  t.notOk(getIn({a: 'b'}, ['a', 2, 3, 4, 2]))
+  t.notOk(getIn({a: 'b'}, ['a', 'd', 'f', '9']))
+
   t.end()
 })
 
