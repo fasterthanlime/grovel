@@ -56,11 +56,13 @@ function getIn (path) {
 }
 
 function count () {
-  try {
-    return Object.keys(this).length
-  } catch (e) {
-    return 0
+  let total = 0
+  for (let key in this) {
+    if (this.hasOwnProperty(key)) {
+      total++
+    }
   }
+  return total
 }
 
 module.exports = {
