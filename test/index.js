@@ -121,4 +121,104 @@ test('count', function (t) {
   t.end()
 })
 
-test('')
+// TODO: test actual diff algorithm
+test('diff (perf)', function (t) {
+  const make_record = (props) => {
+    const record = Object.assign({}, props)
+    for (let i = 0; i < 600; i++) {
+      record['key' + i] = 'oliphant'
+    }
+    return record
+  }
+
+  const a_record = make_record({name: 'Enemy Unknown'})
+  const b_record = make_record({name: 'Enemy Within'})
+
+  const old_state = {}
+
+  for (let i = 0; i < 600; i++) {
+    old_state['record' + i] = a_record
+  }
+
+  const new_state = Object.assign({}, old_state)
+  new_state['record' + 300] = b_record
+
+  const diff = grovel.diff.call(old_state, new_state)
+  t.same(diff, [
+    ['e', ['record300', 'name'], 'Enemy Within']
+  ])
+  t.end()
+})
+
+test('apply', function (t) {
+  const state = {
+    '42': {id: 42},
+    '21': {id: 21},
+    '8': {id: 8}
+  }
+  let saved_state = {}
+  let patched_state = {}
+
+  const send_diff = (label) => {
+    const diff = grovel.diff.call(saved_state, state)
+    saved_state = Object.assign({}, state)
+    patched_state = grovel.apply.call(patched_state, diff)
+    t.same(patched_state, state, label)
+  }
+
+  send_diff('initial')
+
+  state['42'].name = 'Hi!'
+  send_diff('add field')
+
+  state['42'].name = 'Bye!'
+  send_diff('change field')
+
+  delete state['42'].name
+  send_diff('delete field')
+
+  delete state['21']
+  send_diff('delete record')
+
+  t.end()
+})
+
+// TODO: test more patch operations
+test('applyAt', function (t) {
+  let state = {
+    library: {
+      games: {}
+    }
+  }
+
+  const diff = [
+    [
+      'e',
+      ['dashboard', '50723'],
+      {
+        name: 'Nino'
+      }
+    ],
+    [
+      'e',
+      ['dashboard', '50724'],
+      {
+        name: 'Whip'
+      }
+    ]
+  ]
+  state = grovel.applyAt.call(state, diff, ['library', 'games'])
+
+  t.same(state, {
+    library: {
+      games: {
+        dashboard: {
+          '50723': {name: 'Nino'},
+          '50724': {name: 'Whip'}
+        }
+      }
+    }
+  })
+
+  t.end()
+})
