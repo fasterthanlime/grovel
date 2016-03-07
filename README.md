@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/fasterthanlime/grovel.svg?branch=master)](https://travis-ci.org/fasterthanlime/grovel)
 [![Coverage Status](https://coveralls.io/repos/github/fasterthanlime/grovel/badge.svg?branch=master)](https://coveralls.io/github/fasterthanlime/grovel?branch=master)
-[![Maintainer status](https://img.shields.io/badge/maintained%3F-no!-red.svg?style=flat)]
+![Maintainer status](https://img.shields.io/badge/maintained%3F-no!-red.svg?style=flat)
 
 **Disclaimer: this library is tailor-made for another project. No attempt will be made
 to spin it into its own project / PRs with new features will be ignored.**
