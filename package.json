@@ -4,7 +4,11 @@
   "description": "Utilities to handle almost-immutable data structures",
   "main": "index.js",
   "scripts": {
-    "test": "node test/index.js"
+    "test": "npm run tape && npm run lint",
+    "tape": "node test/index.js | tap-difflet",
+    "lint": "standard '**/*.js'",
+    "cov": "nyc -s npm run tape && nyc report -r text",
+    "coveralls": "npm run cov && nyc report -r text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -20,6 +24,9 @@
   },
   "homepage": "https://github.com/fasterthanlime/grovel#readme",
   "devDependencies": {
+    "coveralls": "^2.11.8",
+    "standard": "^6.0.7",
+    "tap-difflet": "^0.4.0",
     "tape": "^4.4.0"
   }
 }

@@ -1,12 +1,17 @@
 'use strict'
 
-let test = require('tape')
-let grovel = require('../index')
+const test = require('tape')
 
-let assocIn = function (obj, path, val) { return grovel.assocIn.call(obj, path, val) }
-let dissocIn = function (obj, path) { return grovel.dissocIn.call(obj, path) }
-let getIn = function (obj, path) { return grovel.getIn.call(obj, path) }
-let count = function (obj) { return grovel.count.call(obj) }
+const grovel = require('../')
+
+const core = require('../core')
+const assocIn = core.assocIn
+const getIn = core.getIn
+const count = core.count
+const dissocIn = core.dissocIn
+const diff = core.diff
+const apply = core.apply
+const applyAt = core.applyAt
 
 test('assocIn', function (t) {
   t.same(assocIn({a: 1}, ['a'], 2), { a: 2 }, 'string key at depth 1')
@@ -121,7 +126,6 @@ test('count', function (t) {
   t.end()
 })
 
-// TODO: test actual diff algorithm
 test('diff (perf)', function (t) {
   const make_record = (props) => {
     const record = Object.assign({}, props)
@@ -143,10 +147,98 @@ test('diff (perf)', function (t) {
   const new_state = Object.assign({}, old_state)
   new_state['record' + 300] = b_record
 
-  const diff = grovel.diff.call(old_state, new_state)
-  t.same(diff, [
+  const ops = diff(old_state, new_state)
+  t.same(ops, [
     ['e', ['record300', 'name'], 'Enemy Within']
-  ])
+  ], 'applied diff correctly and without deep-comparing all records')
+  t.end()
+})
+
+test('diff (cloned object)', function (t) {
+  const a = {name: 'Henry', lastName: 'Kissinger'}
+  const b = Object.assign({}, a)
+
+  const ops = diff(a, b)
+  t.same(ops, [], 'empty diff even if !==')
+  t.end()
+})
+
+test('diff (dates)', function (t) {
+  const a = {d: new Date(1995, 11, 17)}
+  const b = {d: new Date(1990, 7, 21)}
+  t.same(diff(a, b), [
+    ['e', ['d'], new Date(1990, 7, 21)]
+  ], 'dates with different values')
+  t.end()
+})
+
+test('diff (null)', function (t) {
+  {
+    const a = {d: new Date(1995, 11, 17)}
+    const b = {d: null}
+    t.same(diff(a, b), [
+      ['e', ['d'], null]
+    ], 'value turns into null')
+  }
+  {
+    const a = {d: null}
+    const b = {d: new Date(1995, 11, 17)}
+    t.same(diff(a, b), [
+      ['e', ['d'], new Date(1995, 11, 17)]
+    ], 'value stops being null')
+  }
+  t.end()
+})
+
+test('diff (array)', function (t) {
+  {
+    const a = {d: [1, 2, 3]}
+    const b = {d: [1, 2]}
+    t.same(diff(a, b), [
+      ['d', ['d', 2]]
+    ])
+  }
+  {
+    const a = {d: 'cheese'}
+    const b = {d: [1, 2]}
+    t.same(diff(a, b), [
+      ['e', ['d'], [1, 2]]
+    ])
+  }
+  {
+    const a = {d: [8, 7]}
+    const b = {d: [8, 7, 6]}
+    t.same(diff(a, b), [
+      ['e', ['d', 2], 6]
+    ])
+  }
+  t.end()
+})
+
+test('diff (regexp)', function (t) {
+  const re = /const ([\S+]) = require\(([^)]+)\)/
+
+  {
+    const a = {d: 'hello'}
+    const b = {d: re}
+    t.same(diff(a, b), [
+      ['e', ['d'], re]
+    ])
+  }
+  {
+    const a = {d: /hi/}
+    const b = {d: re}
+    t.same(diff(a, b), [
+      ['e', ['d'], re]
+    ])
+  }
+  {
+    const a = {d: re}
+    const b = {d: 'hello'}
+    t.same(diff(a, b), [
+      ['e', ['d'], 'hello']
+    ])
+  }
   t.end()
 })
 
@@ -160,9 +252,9 @@ test('apply', function (t) {
   let patched_state = {}
 
   const send_diff = (label) => {
-    const diff = grovel.diff.call(saved_state, state)
+    const ops = diff(saved_state, state)
     saved_state = Object.assign({}, state)
-    patched_state = grovel.apply.call(patched_state, diff)
+    patched_state = apply(patched_state, ops)
     t.same(patched_state, state, label)
   }
 
@@ -183,11 +275,16 @@ test('apply', function (t) {
   t.end()
 })
 
-// TODO: test more patch operations
 test('applyAt', function (t) {
   let state = {
     library: {
-      games: {}
+      games: {
+        'collections/123': {
+          '70192': {
+            name: 'Outline'
+          }
+        }
+      }
     }
   }
 
@@ -196,29 +293,45 @@ test('applyAt', function (t) {
       'e',
       ['dashboard', '50723'],
       {
-        name: 'Nino'
+        name: 'Valet Tycoon'
       }
+    ],
+    [
+      'd',
+      ['collections/123', '70192']
     ],
     [
       'e',
       ['dashboard', '50724'],
       {
-        name: 'Whip'
+        name: 'Night in James Woods'
       }
     ]
   ]
-  state = grovel.applyAt.call(state, diff, ['library', 'games'])
+  state = applyAt(state, diff, ['library', 'games'])
 
   t.same(state, {
     library: {
       games: {
+        'collections/123': {},
         dashboard: {
-          '50723': {name: 'Nino'},
-          '50724': {name: 'Whip'}
+          '50723': {name: 'Valet Tycoon'},
+          '50724': {name: 'Night in James Woods'}
         }
       }
     }
   })
 
+  t.end()
+})
+
+test('bind-friendly variants', function (t) {
+  t.same(grovel.assocIn.call({}, ['a', 'b'], 1), {a: {b: 1}}, 'bound assocIn')
+  t.same(grovel.dissocIn.call({a: {b: 1}}, ['a', 'b']), {a: {}}, 'bound dissocIn')
+  t.same(grovel.diff.call({a: 1}, {a: 2}), [['e', ['a'], 2]], 'bound diff')
+  t.same(grovel.apply.call({a: 1}, [['e', ['a'], 2]]), {a: 2}, 'bound apply')
+  t.same(grovel.applyAt.call({o: {a: 1}}, [['e', ['a'], 2]], ['o']), {o: {a: 2}}, 'bound applyAt')
+  t.same(grovel.getIn.call({o: {a: 1}}, ['o', 'a']), 1, 'bound getIn')
+  t.same(grovel.count.call([1, 2, 3]), 3, 'bound count')
   t.end()
 })
