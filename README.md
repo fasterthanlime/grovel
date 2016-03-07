@@ -1,5 +1,6 @@
 # grovel
 
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Build Status](https://travis-ci.org/fasterthanlime/grovel.svg?branch=master)](https://travis-ci.org/fasterthanlime/grovel)
 [![Coverage Status](https://coveralls.io/repos/github/fasterthanlime/grovel/badge.svg?branch=master)](https://coveralls.io/github/fasterthanlime/grovel?branch=master)
 [![Maintainer status](https://img.shields.io/badge/maintained%3F-no!-red.svg?style=flat)](https://twitter.com/fasterthanlime/status/706856384835485696)
