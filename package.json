@@ -1,6 +1,6 @@
 {
   "name": "grovel",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "description": "Utilities to handle almost-immutable data structures",
   "main": "index.js",
   "scripts": {
