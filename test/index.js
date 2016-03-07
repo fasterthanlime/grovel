@@ -9,6 +9,7 @@ const assocIn = core.assocIn
 const getIn = core.getIn
 const count = core.count
 const dissocIn = core.dissocIn
+const updateIn = core.updateIn
 const diff = core.diff
 const apply = core.apply
 const applyAt = core.applyAt
@@ -88,6 +89,24 @@ test('dissocIn', function (t) {
       b: {}
     }
   })
+
+  t.end()
+})
+
+test('updateIn', function (t) {
+  t.same(updateIn({
+    a: 1
+  }, ['a'], function (x) { return x + 1 }), {a: 2}, 'single-level depth')
+
+  t.same(updateIn({
+    a: [
+      0,
+      1,
+      {
+        'b': 2
+      }
+    ]
+  }, ['a', 2, 'b'], function (x) { return x + 1 }), {a: [0, 1, {b: 3}]}, 'single-level depth')
 
   t.end()
 })
@@ -333,5 +352,6 @@ test('bind-friendly variants', function (t) {
   t.same(grovel.applyAt.call({o: {a: 1}}, [['e', ['a'], 2]], ['o']), {o: {a: 2}}, 'bound applyAt')
   t.same(grovel.getIn.call({o: {a: 1}}, ['o', 'a']), 1, 'bound getIn')
   t.same(grovel.count.call([1, 2, 3]), 3, 'bound count')
+  t.same(grovel.updateIn.call([1, 2, 3], [1], function (x) { return x * 2 }), [1, 4, 3], 'bound count')
   t.end()
 })

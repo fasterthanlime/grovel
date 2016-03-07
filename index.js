@@ -10,6 +10,10 @@ function dissocIn (path) {
   return core.dissocIn(this, path)
 }
 
+function updateIn (path, f) {
+  return core.updateIn(this, path, f)
+}
+
 function getIn (path) {
   return core.getIn(this, path)
 }
@@ -33,6 +37,7 @@ function applyAt (diff, path) {
 module.exports = {
   assocIn,
   dissocIn,
+  updateIn,
   getIn,
   count,
   diff,

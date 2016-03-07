@@ -39,6 +39,12 @@ function dissocIn (subject, path) {
   return result
 }
 
+function updateIn (subject, path, f) {
+  const original = getIn(subject, path)
+  const mapped = f(original)
+  return assocIn(subject, path, mapped)
+}
+
 function getIn (subject, path) {
   if (!subject) {
     return null
@@ -150,6 +156,7 @@ function applyAt (state, diff, path) {
 module.exports = {
   assocIn,
   dissocIn,
+  updateIn,
   getIn,
   count,
   diff,
